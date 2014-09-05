@@ -3,9 +3,13 @@
     <head>
 		<meta charset="utf-8">
         <title>Javascript Example</title>
-    	<script src="jquery-2.1.1.min.js"></script>
-    	<script src="js/raphael.2.1.0.min.js"></script>
-    	<script src="js/justgage.1.0.1.min.js"></script>
+    	<script src="vendor/jquery/jquery-2.1.1.min.js"></script>
+    	<script src="vendor/uikit/js/uikit.min.js"></script>
+    	<script src="vendor/justgage/raphael.2.1.0.min.js"></script>
+    	<script src="vendor/justgage/justgage.1.0.1.min.js"></script>
+    	<script src="js/dashboard.js"></script>
+        <link rel="stylesheet" href="vendor/uikit/css/uikit.min.css">
+        <link rel="stylesheet" href="vendor/uikit/css/addons/uikit.addons.min.css">
     </head>
     <body>
 		<p id="counter1">0</p>
@@ -16,73 +20,3 @@
 		<div id="metertje2" data-gage="{id:'metertje2',value:34,min:0,max:600,title:'Metertje 2',label:'Temp'}"></div>
     </body>
 </html>
-
-<script type="text/javascript">
-//creeren eigen 'namespace'
-(function ($,document) {
-	//initatie variabelen
-	var url = 'Tags.htm', interval = 1000
-		counters = {}, gages = {};
-	//fill dom-vars en set timeout na domready
-	$(document).ready(function(){
-		counters = {
-			counter: $('#counter1'),
-			teller: $('#counter2'),
-			anders: $('#meer')
-		};
-		$('[data-gage]').each(function () {
-			var ele = $(this), options = $.extend({}, parseOptions(ele.data('gage')));
-			gages[options.id] = new JustGage(options);
-			
-		});
-		setInterval(function() {
-			getData ();
-		}, interval);
-	});
-	
-	function getData () {
-		$.ajax({
-			type: "POST",
-			dataType: 'json',
-			url: url,
-			cache: false,
-			data: {}
-		})
-			.done(function (data) {
-				console.log(data); //uitcommenten in livesite
-				//counters updaten
-				$.each(counters,function (key) {
-					//this staat nu voor waarde 'counters', de elementen die daar gekoppeld zijn, key is de key in json data
-					if (typeof data.tags[key] !== 'undefined') this.text(data.tags[key]);
-				});
-				//gages updaten
-				$.each(gages,function (key) {
-					if (typeof data.tags[key] !== 'undefined') this.refresh(data.tags[key]);
-				});
-			})
-			.fail(function () {
-				//bij fout in request
-			})
-			.always(function (data) {
-				//wordt altijd uitgevoerd na request (stop spinners e.d.)
-			});
-	}
-	
-	function parseOptions(string) {
-
-        if ($.isPlainObject(string)) return string;
-
-        var start = (string ? string.indexOf("{") : -1), options = {};
-
-        if (start != -1) {
-            try {
-                options = (new Function("", "var json = " + string.substr(start) + "; return JSON.parse(JSON.stringify(json));"))();
-            } catch (e) {}
-        }
-
-        return options;
-    };
-	
-	
-})(jQuery,document);
-</script>
