@@ -35,13 +35,13 @@ if ($state['tact'] < rand(-40,5)) $state['tact'] = $state['tactTijd'];
 
 //shifttijd tellen tbv test
 $state['shiftLengte'] = isset($_GET['shiftLengte']) && (int)$_GET['shiftLengte'] > 0 ? (int)$_GET['shiftLengte'] : $state['shiftLengte'];
-if ($state['counter']%20 == 0) {
+if ($state['counter']%60 == 0) {
 	$state['shift']++;
 }
 if (!empty($_GET['shiftReset'])) {
 	$state['shift'] = 0;
 }
-if ($state['shift'] > $shiftLengte) $state['shift'] = 0;
+if ($state['shift'] > $state['shiftLengte']) $state['shift'] = 0;
 
 //productiviteit
 $state['shelfMarge'] = isset($_GET['shelfMarge']) && (int)$_GET['shelfMarge'] > 0 ? (int)$_GET['shelfMarge'] : $state['shelfMarge'];
@@ -66,7 +66,6 @@ if ($state['andon']) {
 
 $state['now'] = $now->format('d-m-Y H:i:s');
 $state['counter']++;
-if ($state['counter'] > 5000) $state['counter'] = 0;
 
 $_SESSION['testState'] = $state;
 
