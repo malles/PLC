@@ -1,21 +1,24 @@
 <?php
 session_start();
 
-$shiftLengte = 4 * 60;
+$shiftLengte = 8 * 60;
 $tactTijd = 120;
 $shelfTarget = 240;
+$now = new DateTime('now',new DateTimeZone('Europe/Amsterdam'));
 
 if (!empty($_SESSION)) {
 	$state = $_SESSION['testState'];
 } else {
 	$state = array(
 		'counter'=>0,
+		'now'=>$now->format('d-m-Y H:i:s'),
+		'andon'=>'',
 		'tact'=>$tactTijd,
 		'tactTijd'=>$tactTijd,
 		'shift'=>0,
 		'shiftLengte'=>$shiftLengte,
 		'tactMarge'=>20,
-		'shelf'=>$shelfTarget,
+		'shelf'=>0,
 		'shelfTarget'=>$shelfTarget,
 		'shelfMarge'=>5
 	);
@@ -28,16 +31,15 @@ if (!empty($_GET['tactReset'])) {
 } else {
 	$state['tact']--;
 }
-if ($state['tact'] < -50) $state['tact'] = $tactTijd;
+if ($state['tact'] < rand(-40,5)) $state['tact'] = $state['tactTijd'];
 
 //shifttijd tellen tbv test
 $state['shiftLengte'] = isset($_GET['shiftLengte']) && (int)$_GET['shiftLengte'] > 0 ? (int)$_GET['shiftLengte'] : $state['shiftLengte'];
 if ($state['counter']%20 == 0) {
-	if (!empty($_GET['shiftReset'])) {
-		$state['shift'] = 0;
-	} else {
-		$state['shift']++;
-	}
+	$state['shift']++;
+}
+if (!empty($_GET['shiftReset'])) {
+	$state['shift'] = 0;
 }
 if ($state['shift'] > $shiftLengte) $state['shift'] = 0;
 
@@ -52,11 +54,22 @@ if ($state['counter']%5 == 0) {
 	if ($state['shelf'] < 0) $state['shelf'] = 0;
 }
 
+if ($state['counter']%45 == 0 && !$state['andon']) {
+	$state['andon'] = 'Een hele erge foutmelding!';
+	$_SESSION['andonStart'] = $state['counter'];
+}
+if ($state['andon']) {
+	if ($state['counter'] > $_SESSION['andonStart'] + 15) {
+		$state['andon'] = '';
+	}
+}
+
+$state['now'] = $now->format('d-m-Y H:i:s');
 $state['counter']++;
+if ($state['counter'] > 5000) $state['counter'] = 0;
 
 $_SESSION['testState'] = $state;
+
+header('Content-Type: application/json');
 ?>
-{
-	"tags": <?php echo json_encode($state); ?>
-}
-	
+{"tags": <?php echo json_encode($state); ?>}
