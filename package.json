@@ -1,0 +1,20 @@
+{
+    "name": "bixie-plc",
+    "version": "1.0.0",
+    "description": "Dashboard voor PLC",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Matthijs Alles - Bixie",
+    "license": "GNU/GPL",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/malles/PLC"
+    },
+    "devDependencies": {
+        "grunt-contrib-uglify": "0.1.1rc6",
+        "grunt-contrib-watch": "0.2.0rc5",
+        "grunt": "~0.4.2"
+    }
+}
