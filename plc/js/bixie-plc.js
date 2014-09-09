@@ -189,6 +189,7 @@
             }
             if (!state && this.blinker) {
                 clearInterval(this.blinker);
+                this.progress.css('opacity', 1);
                 this.blinker = false;
             }
         },
