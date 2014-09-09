@@ -54,6 +54,7 @@ if ($state['counter']%5 == 0) {
 	if ($state['shelf'] < 0) $state['shelf'] = 0;
 }
 
+//foutmelding
 if ($state['counter']%45 == 0 && !$state['andon']) {
 	$state['andon'] = 'Een hele erge foutmelding!';
 	$_SESSION['andonStart'] = $state['counter'];
