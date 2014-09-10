@@ -73,3 +73,4 @@ $_SESSION['testState'] = $state;
 header('Content-Type: application/json');
 ?>
 {"tags": <?php echo json_encode($state); ?>}
+

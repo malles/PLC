@@ -34,6 +34,10 @@
             debug: false,
             ajaxUrl: 'Tags.htm',
             interval: 1000,
+            keys: {
+                now: 'Now',
+                andon: 'Andon'
+            },
             widgets: {
                 tact: {type: 'progress', selector: '#tactProgress'},
                 shelf: {type: 'target', selector: '#shelfTarget'},
@@ -46,6 +50,9 @@
             this.form = this.find('form');
             this.datetimes = this.find('[data-bix-datetime]');
             this.errorMessage = this.find('[data-bix-error]');
+            if (this.options.debug) {
+                this.debugEl = this.find('.bix-debug');
+            }
             $this.widgets = {};
             $.each(this.options.widgets, function (name) {
                 var ele = $(this.selector);
@@ -59,16 +66,26 @@
         getData: function () {
             var $this = this;
             $.ajax({
-                type: "GET",
-                dataType: 'json',
+                type: "POST",
                 url: this.options.ajaxUrl,
                 cache: false,
                 data: $this.form.serialize()
             })
-                .done(function (data) {
-                    $this.datetimes.text(data.tags.now);
-                    if (data.tags.andon) {
-                        $this.errorMessage.show().find('.content').text(data.tags.andon);
+                .done(function (returnData) {
+                    var data = {};
+                    if (typeof returnData === 'object') {
+                        data = returnData;
+                    } else {
+                        try {
+                            data = JSON.parse(returnData.trim());
+                        } catch (e) {
+                            console.log('Fout in JSON response: ' + returnData);
+                            data.tags = {};
+                        }
+                    }
+                    $this.datetimes.text(data.tags[$this.options.keys.now]);
+                    if (data.tags[$this.options.keys.andon]) {
+                        $this.errorMessage.show().find('.content').text(data.tags[$this.options.keys.andon]);
                     } else {
                         $this.errorMessage.hide().find('.content').text('');
                     }
@@ -81,8 +98,7 @@
                 })
                 .always(function (data) {
                     if ($this.options.debug) {
-                        console.info('Data ververst:');
-                        console.log(data.tags);
+                        $this.debugEl.text(data);
                     }
                     $.each($this.widgets, function () {
                         this.reset(data);
@@ -138,15 +154,17 @@
             blink: 0,
             keys: {
                 tact: {
-                    key: 'tact',
-                    max: 'tactTijd',
-                    marge: 'tactMarge',
+                    key: 'Tact',
+                    max: 'TactTijd',
+                    target: 'TactTijd',
+                    marge: 'TactMarge',
                     reset: 'tactReset'
                 },
                 shift: {
-                    key: 'shift',
-                    max: 'shiftLengte',
-                    reset: 'shiftReset'
+                    key: 'Shift',
+                    max: 'ShiftLengte',
+                    target: 'ShiftLengte',
+                    reset: 'ShiftReset'
                 }
             }
         },
@@ -157,7 +175,9 @@
             this.blinkState = true;
             this.progress = this.find('div.uk-progress-bar');
             this.alertEl = this.find('div.uk-alert');
-            this.resetInput = this.find('input[name=' + this.options.keys[this.options.type].reset + ']');
+            this.targetInput = this.find('input[name*=' + this.options.keys[this.options.type].target + ']');
+            this.margeInput = this.find('input[name*=' + this.options.keys[this.options.type].marge + ']');
+            this.resetInput = this.find('input[name*=' + this.options.keys[this.options.type].reset + ']');
             this.resetButton = this.find('button').click(function () {
                 $this.resetInput.val(1);
                 $(this).addClass('uk-button-success');
@@ -178,6 +198,12 @@
             this.progress.css('width', perc + '%');
             this.alertEl.removeClass('uk-alert-success uk-alert-warning uk-alert-danger').addClass('uk-alert-' + className);
             this.alertEl.text(value + this.options.suffix);
+            if (!this.find('input[name*=' + this.options.keys[this.options.type].target + ']:focus').length) {
+                this.targetInput.val(max);
+            }
+            if (!this.find('input[name*=' + this.options.keys[this.options.type].marge + ']:focus').length) {
+                this.margeInput.val(marge);
+            }
 
         },
         setBlink: function (state) {
@@ -232,6 +258,14 @@
     UI.component('bixtarget', {
 
         defaults: {
+            keys: {
+                key: 'Shelf',
+                shift: 'Shift',
+                shiftLengte: 'ShiftLengte',
+                target: 'ShelfTarget',
+                marge: 'ShelfMarge',
+                reset: 'ShelfReset'
+            }
         },
 
         init: function () {
@@ -242,16 +276,20 @@
             this.progressNeg = this.find('div.bix-negative div.uk-progress-bar');
             this.progressPos = this.find('div.bix-positive div.uk-progress-bar');
 
-            this.resetInput = this.find('input[name=shelfReset]');
+            this.targetInput = this.find('input[name*=' + this.options.keys.target + ']');
+            this.margeInput = this.find('input[name*=' + this.options.keys.marge + ']');
+            this.resetInput = this.find('input[name*=' + this.options.keys.reset + ']');
             this.resetButton = this.find('button').click(function () {
                 $this.resetInput.val(1);
                 $(this).addClass('uk-button-success');
             });
         },
         setData: function (data) {
-            var produced = data.tags.shelf, target = data.tags.shift * (data.tags.shelfTarget / data.tags.shiftLengte),
-                delta = produced - target, perc = (Math.abs(delta) / (2 * data.tags.shelfMarge)) * 100,
-                className = produced > target ? 'success' : produced < (target - data.tags.shelfMarge) ? 'danger' : 'warning';
+            var produced = data.tags[this.options.keys.key],
+                target = data.tags[this.options.keys.shift] * (data.tags[this.options.keys.target] / data.tags[this.options.keys.shiftLengte]),
+                delta = produced - target,
+                perc = (Math.abs(delta) / (2 * data.tags[this.options.keys.marge])) * 100,
+                className = produced > target ? 'success' : produced < (target - data.tags[this.options.keys.marge]) ? 'danger' : 'warning';
             if (delta < 0) {
                 this.progressNeg.parent().removeClass('uk-progress-warning uk-progress-danger').addClass('uk-progress-' + className);
                 this.progressNeg.css('width', perc + '%');
@@ -263,6 +301,12 @@
             this.deltaEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
             this.alertEl.removeClass('uk-alert-success uk-alert-warning uk-alert-danger').addClass('uk-alert-' + className);
 
+            if (!this.find('input[name*=shelfTarget]:focus').length) {
+                this.targetInput.val(data.tags[this.options.keys.target]);
+            }
+            if (!this.find('input[name*=shelfMarge]:focus').length) {
+                this.margeInput.val(data.tags[this.options.keys.marge]);
+            }
             this.targetEl.text(Math.round(target));
             this.deltaEl.text(Math.round(delta));
             this.alertEl.text(produced + ' stuks');
