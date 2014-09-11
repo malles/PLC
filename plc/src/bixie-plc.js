@@ -34,6 +34,7 @@
             debug: false,
             ajaxUrl: 'Tags.htm',
             interval: 1000,
+            blink: 0,
             keys: {
                 now: 'Now',
                 andon: 'Andon'
@@ -49,6 +50,7 @@
             var $this = this, tactProgress = $('#tactProgress'), shelfTarget = $('#shelfTarget'), shiftProgress = $('#shiftProgress');
             this.form = this.find('form');
             this.datetimes = this.find('[data-bix-datetime]');
+            this.blinkEl = $('body');
             this.errorMessage = this.find('[data-bix-error]');
             $this.widgets = {};
             $.each(this.options.widgets, function (name) {
@@ -85,6 +87,9 @@
                     } else {
                         $this.errorMessage.hide().find('.content').text('');
                     }
+                    if ($this.options.blink) {
+                        $this.setBlink(data.tags[$this.options.keys.andon] !== '');
+                    }
                     $.each($this.widgets, function () {
                         this.setData(data);
                     });
@@ -97,6 +102,27 @@
                         console.log(returnData);
                     }
                 });
+        },
+        setBlink: function (state) {
+            var $this = this;
+            if (state && !this.blinker) {
+                this.blinker = setInterval(function () {
+                    $this.blink();
+                }, this.options.blink);
+            }
+            if (!state && this.blinker) {
+                clearInterval(this.blinker);
+                this.blinkEl.removeClass('uk-body-danger');
+                this.blinker = false;
+            }
+        },
+        blink: function () {
+            if (this.blinkState) {
+                this.blinkEl.addClass('uk-body-danger');
+            } else {
+                this.blinkEl.removeClass('uk-body-danger');
+            }
+            this.blinkState = !this.blinkState;
         }
     });
 

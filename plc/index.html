@@ -14,12 +14,17 @@
     <link rel="stylesheet" href="vendor/uikit/css/uikit.big.min.css">
 </head>
 <body>
-<div class="bix-bg" data-bix-dashboard="{debug:false,ajaxUrl:'Tags.htm',interval:1000}">
+<div class="bix-bg" data-bix-dashboard="{debug:false,ajaxUrl:'Tags.htm',interval:1000, blink:500}">
     <div class="bix-wrapper bix-content uk-container uk-container-center uk-margin-top">
-        <a href="progressbars.html"><i class="uk-icon-eye"></i></a>
         <div class="uk-grid">
             <div class="uk-width-1-1">
                 <div class="uk-panel uk-panel-box uk-panel-box-primary uk-text-center"><h1 data-bix-datetime></h1></div>
+            </div>
+        </div>
+        <div class="uk-grid" hidden data-bix-error>
+            <div class="uk-width-1-1">
+                <div class="uk-alert uk-alert-danger uk-text-center uk-text-large">
+                    <h2><i class="uk-icon-exclamation-triangle uk-margin-right"></i><span class="content"></span></h2></div>
             </div>
         </div>
         <div class="uk-grid" data-uk-grid-margin="">
@@ -64,12 +69,6 @@
                     <div class="uk-badge uk-panel-badge">Target actueel</div>
                     <h1 class="bix-target uk-header-large uk-text-center">0</h1>
                 </div>
-            </div>
-        </div>
-        <div class="uk-grid" hidden data-bix-error>
-            <div class="uk-width-1-1">
-                <div class="uk-alert uk-alert-danger uk-text-center">
-                    <h2><i class="uk-icon-exclamation-triangle uk-margin-right"></i><span class="content"></span></h2></div>
             </div>
         </div>
         <div style="height: 300px"></div>
@@ -135,6 +134,7 @@
                             <i class="uk-icon-check uk-margin-small-right"></i>Aanpassen</button>
                     </div>
                 </div>
+                <a href="progressbars.html"><i class="uk-icon-eye"></i></a>
             </form>
         </div>
 
