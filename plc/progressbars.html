@@ -1,0 +1,77 @@
+<!-- AWP_In_Variable Name='"webdata".TactTijd' -->
+<!-- AWP_In_Variable Name='"webdata".TactMarge' -->
+<!-- AWP_In_Variable Name='"webdata".ShelfTarget' -->
+<!-- AWP_In_Variable Name='"webdata".ShelfMarge' -->
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>PLC Dashboard</title>
+    <script src="vendor/jquery/jquery-2.1.1.min.js"></script>
+    <script src="vendor/uikit/js/uikit.min.js"></script>
+    <script src="js/bixie-plc.min.js"></script>
+    <link rel="stylesheet" href="vendor/uikit/css/uikit.big.min.css">
+</head>
+<body>
+    <div class="bix-bg" data-bix-dashboard="{debug:true,ajaxUrl:'Tags.htm',interval:1000}">
+        <div class="bix-wrapper bix-content uk-container uk-container-center uk-margin-top">
+            <a href="index.html"><i class="uk-icon-eye-slash"></i></a>
+            <div class="uk-grid">
+                <div class="uk-width-1-1">
+                    <div class="uk-panel uk-panel-box uk-panel-box-primary uk-text-center"><h1 data-bix-datetime></h1></div>
+                </div>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin="">
+                <div class="uk-width-medium-1-2">
+                    <div id="tactProgress" class="uk-panel uk-panel-box uk-panel-box-secondary" data-bix-progress="{type:'tact',suffix:'', blink:250, progressbar: true}">
+                        <h3 class="uk-panel-title uk-text-center">Tact</h3>
+                        <div class="uk-progress" hidden>
+                            <div class="uk-progress-bar"></div>
+                        </div>
+                        <div class="uk-alert uk-text-center uk-text-bold uk-text-large"></div>
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2">
+                    <div id="bixShelfTarget" class="uk-panel uk-panel-box uk-panel-box-secondary" data-bix-target="{progressbar: true}">
+                        <h3 class="uk-panel-title uk-text-center">FrontShelfs</h3>
+                        <div class="uk-grid uk-grid-small" hidden>
+                            <div class="uk-width-1-2 bix-negative">
+                                <div class="uk-progress uk-progress-flip" >
+                                    <div class="uk-progress-bar"></div>
+                                </div>
+                            </div>
+                            <div class="uk-width-1-2 bix-positive">
+                                <div class="uk-progress uk-progress-success">
+                                    <div class="uk-progress-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uk-alert uk-text-center uk-text-bold uk-text-large"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin="">
+                <div class="uk-width-medium-1-2">
+                    <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+                        <div class="uk-badge uk-panel-badge">Target actueel</div>
+                        <h1 class="bix-target uk-header-large uk-text-center">0</h1>
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2">
+                    <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+                        <div class="uk-badge uk-panel-badge">Afwijking</div>
+                        <h1 class="bix-delta uk-header-large uk-text-center">0</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-grid" hidden data-bix-error>
+                <div class="uk-width-1-1">
+                    <div class="uk-alert uk-alert-danger uk-text-center">
+                        <h2><i class="uk-icon-exclamation-triangle uk-margin-right"></i><span class="content"></span></h2></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
