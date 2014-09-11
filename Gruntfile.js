@@ -10,7 +10,8 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         // Metadata
         meta: {
-            jsPath: 'plc/js'
+            jsPath: 'plc/js',
+            srcPath: 'plc/src'
         },
         uglify: {
             options: {
@@ -18,13 +19,13 @@ module.exports = function (grunt) {
             },
             js_files: {
                 files: {
-                    '<%= meta.jsPath %>/<%= pkg.name %>.min.js': '<%= meta.jsPath %>/<%= pkg.name %>.js'
+                    '<%= meta.jsPath %>/<%= pkg.name %>.min.js': '<%= meta.srcPath %>/<%= pkg.name %>*.js'
                 }
             }
         },
         watch: {
             src: {
-                files: '<%= meta.jsPath %>/<%= pkg.name %>.js',
+                files: '<%= meta.srcPath %>/*.js',
                 tasks: ['uglify']
             }
         }
