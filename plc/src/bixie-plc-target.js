@@ -35,8 +35,7 @@
             progressbar: true,
             keys: {
                 key: 'Shelf',
-                shift: 'Shift',
-                shiftLengte: 'ShiftLengte',
+                targetActual: 'ShelfTargetActueel',
                 target: 'ShelfTarget',
                 marge: 'ShelfMarge',
                 reset: 'ShelfReset'
@@ -56,7 +55,7 @@
         },
         setData: function (data) {
             var produced = data.tags[this.options.keys.key],
-                target = data.tags[this.options.keys.shift] * (data.tags[this.options.keys.target] / data.tags[this.options.keys.shiftLengte]),
+                target = data.tags[this.options.keys.targetActual],
                 delta = produced - target,
                 perc = (Math.abs(delta) / (2 * data.tags[this.options.keys.marge])) * 100,
                 className = produced > target ? 'success' : produced < (target - data.tags[this.options.keys.marge]) ? 'danger' : 'warning';

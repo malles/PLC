@@ -66,7 +66,7 @@
                 marge = data.tags[this.options.keys[this.options.type].marge],
                 max = data.tags[this.options.keys[this.options.type].max],
                 perc = value >= 0 ? (value / max) * 100 : 100,
-                className = value < 0 ? 'danger' : value <= marge ? 'warning' : 'success';
+                className = value <= 0 ? 'danger' : value <= marge ? 'warning' : 'success';
 
             if (this.options.blink) {
                 this.setBlink(value <= 0);

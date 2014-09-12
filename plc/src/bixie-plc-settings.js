@@ -56,8 +56,18 @@
                         $this.resets[key].val(1);
                     }
                     $this.submit();
-                });
+                })
+                    .on('keyup', 'return', function (e) {
+                        if ($this.selUserModal.isActive()) {
+                            e.preventDefault();
+                            $this.checkData();
+                            if (!$this.dom.button.attr('disabled')) {
+                                $this.attachUser();
+                            }
+                        }
+                    });
             });
+            $(document);
 
         },
         submit: function () {

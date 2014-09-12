@@ -65,7 +65,7 @@
         getData: function () {
             var $this = this;
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: this.options.ajaxUrl,
                 cache: false
             })
