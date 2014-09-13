@@ -41,7 +41,11 @@
             this.inputs = {};
             $.each(this.options.keys, function () {
                 $this.outputs[this] = $this.find('[data-bix-output=' + this + ']');
-                $this.inputs[this] = $this.find('[name*=' + this + ']');
+                $this.inputs[this] = $this.find('[name*=' + this + ']').on('keydown', function (e) {
+                    if (e.keyCode === 13) { // return
+                        $this.submit();
+                    }
+                });
             });
             this.buttons = {};
             this.resets = {};
@@ -56,18 +60,8 @@
                         $this.resets[key].val(1);
                     }
                     $this.submit();
-                })
-                    .on('keyup', 'return', function (e) {
-                        if ($this.selUserModal.isActive()) {
-                            e.preventDefault();
-                            $this.checkData();
-                            if (!$this.dom.button.attr('disabled')) {
-                                $this.attachUser();
-                            }
-                        }
-                    });
+                });
             });
-            $(document);
 
         },
         submit: function () {

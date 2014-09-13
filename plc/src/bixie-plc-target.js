@@ -73,8 +73,6 @@
             this.deltaEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
             this.deltaEl.text(Math.round(delta));
 
-            console.log(data);
-            console.log(this.alertEl);
             this.alertEl.removeClass('uk-alert-success uk-alert-warning uk-alert-danger').addClass('uk-alert-' + className);
             this.alertEl.text(produced + this.options.suffix);
 
