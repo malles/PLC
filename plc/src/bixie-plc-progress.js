@@ -59,7 +59,7 @@
                 this.progress.parent().show();
             }
             this.blinkEl = this.find('.bix-blink');
-            this.alertEl = this.find('div.uk-alert');
+            this.tactEl = this.find('.bix-tact');
         },
         setData: function (data) {
             var value = data.tags[this.options.keys[this.options.type].key],
@@ -76,8 +76,8 @@
                 this.progress.parent().removeClass('uk-progress-success uk-progress-warning uk-progress-danger').addClass('uk-progress-' + className);
                 this.progress.css('width', perc + '%');
             }
-            this.alertEl.removeClass('uk-alert-success uk-alert-warning uk-alert-danger').addClass('uk-alert-' + className);
-            this.alertEl.text(value + this.options.suffix);
+            this.tactEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
+            this.tactEl.text(value + this.options.suffix);
         },
         setBlink: function (state) {
             var $this = this;

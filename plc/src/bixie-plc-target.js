@@ -43,7 +43,7 @@
         },
 
         init: function () {
-            this.alertEl = this.find('div.uk-alert');
+            this.actualEl = $('.bix-actual');
             this.targetEl = $('.bix-target');
             this.deltaEl = $('.bix-delta');
 
@@ -58,7 +58,7 @@
                 target = data.tags[this.options.keys.targetActual],
                 delta = produced - target,
                 perc = (Math.abs(delta) / (2 * data.tags[this.options.keys.marge])) * 100,
-                className = produced > target ? 'success' : produced < (target - data.tags[this.options.keys.marge]) ? 'danger' : 'warning';
+                className = produced >= target ? 'success' : produced <= (target - data.tags[this.options.keys.marge]) ? 'danger' : 'warning';
 
             if (this.options.progressbar) {
                 if (delta < 0) {
@@ -70,13 +70,14 @@
                     this.progressNeg.css('width', 0);
                 }
             }
-            this.deltaEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
-            this.deltaEl.text(Math.round(delta));
-
-            this.alertEl.removeClass('uk-alert-success uk-alert-warning uk-alert-danger').addClass('uk-alert-' + className);
-            this.alertEl.text(produced + this.options.suffix);
 
             this.targetEl.text(Math.round(target));
+
+            this.actualEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
+            this.actualEl.text(produced + this.options.suffix);
+
+            this.deltaEl.removeClass('uk-text-success uk-text-warning uk-text-danger').addClass('uk-text-' + className);
+            this.deltaEl.text(Math.round(delta));
         }
     });
 

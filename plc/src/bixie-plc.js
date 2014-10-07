@@ -51,7 +51,9 @@
             this.form = this.find('form');
             this.datetimes = this.find('[data-bix-datetime]');
             this.blinkEl = $('body');
-            this.errorMessage = this.find('[data-bix-error]');
+            this.modalEle = $('#bix-error-modal');
+            this.modal = UI.modal(this.modalEle, {bgclose: false});
+            this.modalContent = this.modalEle.find('.bix-modal-content');
             $this.widgets = {};
             $.each(this.options.widgets, function (name) {
                 var ele = $(this.selector);
@@ -82,11 +84,7 @@
                         }
                     }
                     $this.datetimes.text(data.tags[$this.options.keys.now]);
-                    if (data.tags[$this.options.keys.andon]) {
-                        $this.errorMessage.show().find('.content').text(data.tags[$this.options.keys.andon]);
-                    } else {
-                        $this.errorMessage.hide().find('.content').text('');
-                    }
+                    $this.setError(data.tags[$this.options.keys.andon]);
                     if ($this.options.blink) {
                         $this.setBlink(data.tags[$this.options.keys.andon] !== '');
                     }
@@ -102,6 +100,10 @@
                         console.log(returnData);
                     }
                 });
+        },
+        setError: function (error) {
+            this.modalContent.find('.content').text(error);
+            this.modal[(error ? 'show' : 'hide')]();
         },
         setBlink: function (state) {
             var $this = this;
