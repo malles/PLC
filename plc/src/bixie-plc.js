@@ -102,7 +102,9 @@
                 });
         },
         setError: function (error) {
-            this.modalContent.find('.content').text(error);
+            if (error !== '-') {
+                this.modalContent.find('.content').text(error);
+            }
             this.modal[(error ? 'show' : 'hide')]();
         },
         setBlink: function (state) {
